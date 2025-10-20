@@ -1,0 +1,81 @@
+<h1 class="page-title mb-4">Scenario Simulator</h1>
+
+<!-- Load baseline -->
+<div class="card mb-3">
+  <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <button class="btn btn-primary" (click)="loadCurrentState()">
+      Load Current State from Cockpit
+    </button>
+    <div *ngIf="baselineLoaded" class="text-success fw-semibold">
+      ✅ Baseline loaded
+    </div>
+  </div>
+</div>
+
+<!-- Sliders -->
+<div class="card mb-4" *ngIf="baselineLoaded">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Adjust Parameters</h5>
+    <div class="slider-group" *ngFor="let k of keys">
+      <label class="form-label">{{ k }}</label>
+      <input type="range"
+             class="form-range"
+             min="0"
+             [max]="maxValues[k]"
+             step="1"
+             [(ngModel)]="simValues[k]"
+             [ngModelOptions]="{standalone:true}">
+      <div class="d-flex justify-content-between small text-muted">
+        <span>Current: {{ currentValues[k] }}</span>
+        <span>Simulated: {{ simValues[k] }}</span>
+      </div>
+    </div>
+
+    <div class="mt-3 d-flex gap-2 flex-wrap">
+      <button class="btn btn-pill" (click)="applyPreset('cool')">Cool temps</button>
+      <button class="btn btn-pill" (click)="applyPreset('lower_torque')">Lower torque</button>
+      <button class="btn btn-pill" (click)="applyPreset('new_tool')">New tool</button>
+    </div>
+
+    <button class="btn btn-success mt-4" (click)="runSimulation()" [disabled]="busy">
+      Run Simulation
+    </button>
+  </div>
+</div>
+
+<!-- Result comparison -->
+<div class="row g-4 mt-2" *ngIf="currentRes && whatIfRes">
+  <div class="col-12 col-md-6">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Current</h5>
+        <div class="display-risk" [class.risk]="currentRes.prediction === 'panne_probable'">
+          {{ (currentRes.probability * 100) | number:'1.0-0' }} %
+        </div>
+        <div class="text-muted">{{ currentRes.prediction }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Simulated</h5>
+        <div class="display-risk" [class.risk]="whatIfRes.prediction === 'panne_probable'">
+          {{ (whatIfRes.probability * 100) | number:'1.0-0' }} %
+        </div>
+        <div class="text-muted">{{ whatIfRes.prediction }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Δ -->
+<div *ngIf="deltaPct() !== null" class="text-center mt-3">
+  <span class="fw-bold">Δ Risk: </span>
+  <span [class.text-success]="deltaPct()! < 0" [class.text-danger]="deltaPct()! > 0">
+    {{ deltaPct() }} pp
+  </span>
+</div>
+
+<!-- Error -->
+<div class="text-danger mt-3" *ngIf="errorMsg">{{ errorMsg }}</div>

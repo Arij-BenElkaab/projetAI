@@ -1,0 +1,3 @@
+:host ::ng-deep .sidebar[data-color="blue"] { background: #0d6efd !important; }
+:host ::ng-deep .sidebar .nav li > a { color: #fff !important; }
+:host ::ng-deep .sidebar .nav li.active > a { background: rgba(255,255,255,.15) !important; }

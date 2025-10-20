@@ -1,0 +1,55 @@
+/* Layout spacing managed by cards + Bootstrap. Only keep gauge + small extras. */
+
+/* Risk bar (KPI card) */
+.riskbar {
+    height: 12px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+  }
+  .riskbar > span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+  }
+  
+  /* Gauge (your existing CSS semicircle) */
+  .gauge {
+    --pct: 0; /* set via style binding 0..100 */
+    width: 220px;
+    height: 110px;
+    border-radius: 220px 220px 0 0;
+    background: conic-gradient(from 180deg, #e5e5e5 0deg, #e5e5e5 180deg) border-box;
+    mask:
+      radial-gradient(110px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    -webkit-mask:
+      radial-gradient(110px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    position: relative;
+    border: 10px solid #f0f0f0;
+  }
+  .gauge::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(
+      from 180deg,
+      #27ae60 calc(var(--pct) * 1.8deg),
+      #e5e5e5 calc(var(--pct) * 1.8deg)
+    );
+    mask:
+      radial-gradient(110px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    -webkit-mask:
+      radial-gradient(110px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    border-radius: inherit;
+  }
+  
+  .readout .badge { border-radius: 999px; padding: .45rem .7rem; font-weight: 600; }
+  .badge-risk-low  { background:#e8f5e9;  color:#1b5e20; }
+  .badge-risk-med  { background:#fff7e6;  color:#92400e; }
+  .badge-risk-high { background:#fde8e8;  color:#9b1c1c; }
+  

@@ -1,0 +1,117 @@
+<h1 class="page-title mb-3">Vehicle Risk Dashboard</h1>
+
+<div class="card mb-3">
+  <div class="card-body d-flex flex-wrap gap-3 align-items-end">
+    <div>
+      <label class="form-label mb-1">Decision Mode</label><br>
+      <div class="btn-group">
+        <button
+          [attr.class]="mode==='balanced' ? 'btn btn-primary' : 'btn'"
+          (click)="mode='balanced'"
+          [disabled]="thr!=null">
+          Balanced
+        </button>
+        <button
+          [attr.class]="mode==='high_recall' ? 'btn btn-primary' : 'btn'"
+          (click)="mode='high_recall'"
+          [disabled]="thr!=null">
+          High recall
+        </button>
+      </div>
+      <div class="form-text" *ngIf="thr!=null">Custom threshold overrides mode</div>
+    </div>
+
+    <div class="ms-auto" style="min-width:260px">
+      <label class="form-label mb-1">Threshold</label>
+      <input type="range" min="0" max="1" step="0.01" class="form-range"
+             [(ngModel)]="thr" [ngModelOptions]="{standalone:true}">
+      <div class="small text-muted">Value: {{ thr===null ? '—' : (thr | number:'1.2-2') }}</div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" (click)="loadExample()">Load Example</button>
+      <button class="btn btn-outline-secondary" (click)="thr=null">Reset Threshold</button>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column align-items-center justify-content-center">
+        <!-- use helper to set CSS var -->
+        <div class="gauge mb-3" [attr.style]="lastStyle()"></div>
+
+        <div class="display-6 fw-bold mb-1">{{ lastPct }}%</div>
+
+        <span [attr.class]="riskBadge()">
+          {{ last ? (last.prediction || 'No prediction yet') : 'No prediction yet' }}
+        </span>
+
+        <div class="mt-3" *ngIf="deltaPP() !== null">
+          <span class="fw-semibold">Δ Risk:</span>
+          <span [attr.class]="deltaClass()">{{ deltaPP() }} pp</span>
+        </div>
+
+        <div class="d-flex gap-3 mt-3 text-muted small">
+          <span>mode: {{ thr!=null ? 'custom' : mode }}</span>
+          <span *ngIf="last && last.threshold_used != null">
+            thr_used: {{ last.threshold_used | number:'1.2-2' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Controls</h5>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6" *ngFor="let k of keys">
+            <label class="form-label">{{ k }}</label>
+            <input type="range" class="form-range"
+                   [min]="0" [max]="maxValues[k]" step="1"
+                   [(ngModel)]="values[k]" [ngModelOptions]="{standalone:true}">
+            <div class="d-flex justify-content-between small text-muted">
+              <span>Value: {{ values[k] | number:'1.0-0' }} {{ unit(k) }}</span>
+              <span>Max: {{ maxValues[k] | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-pill" (click)="applyPreset('cool')">Cool temps</button>
+          <button class="btn btn-pill" (click)="applyPreset('lower_torque')">Lower torque</button>
+          <button class="btn btn-pill" (click)="applyPreset('new_tool')">New tool</button>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-primary" (click)="predict()" [disabled]="busy">Predict</button>
+          <button class="btn btn-success" (click)="simulate()" [disabled]="busy">Simulate What-if</button>
+        </div>
+
+        <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1" *ngIf="sim">
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Simulated</h6>
+
+        <div class="gauge mb-2" [attr.style]="simStyle()"></div>
+
+        <div class="h4 m-0">{{ simPct }}%</div>
+
+        <span [attr.class]="simBadge()">
+          {{ sim ? sim.prediction : '' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

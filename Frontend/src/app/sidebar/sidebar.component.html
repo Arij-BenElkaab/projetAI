@@ -1,0 +1,13 @@
+<div class="logo text-center py-3">
+    <a class="simple-text text-white" routerLink="/">Travel App</a>
+  </div>
+  
+  <ul class="nav">
+    <li routerLinkActive="active" *ngFor="let item of menuItems">
+      <a [routerLink]="[item.path]">
+        <i [class]="item.icon"></i>
+        <p>{{ item.title }}</p>
+      </a>
+    </li>
+  </ul>
+  

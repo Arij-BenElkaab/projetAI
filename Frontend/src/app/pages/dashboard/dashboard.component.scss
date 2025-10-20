@@ -1,0 +1,31 @@
+.gauge {
+    --pct: 0;
+    width: 260px; height: 130px; border-radius: 260px 260px 0 0;
+    background: conic-gradient(from 180deg, #e5e5e5 0deg, #e5e5e5 180deg) border-box;
+    mask:
+      radial-gradient(130px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    -webkit-mask:
+      radial-gradient(130px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    border: 12px solid #f0f0f0;
+    position: relative;
+  }
+  .gauge::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: conic-gradient(from 180deg, #27ae60 calc(var(--pct)*1.8deg), #e5e5e5 calc(var(--pct)*1.8deg));
+    mask:
+      radial-gradient(130px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    -webkit-mask:
+      radial-gradient(130px at 50% 100%, transparent 99%, #000 101%) top / 100% 200%,
+      linear-gradient(#000 0 0) padding-box;
+    border-radius: inherit;
+  }
+  .badge { border-radius: 999px; padding:.45rem .7rem; font-weight:600; }
+  .badge-risk-low  { background:#e8f5e9;  color:#1b5e20; }
+  .badge-risk-high { background:#fde8e8;  color:#9b1c1c; }
+  .btn.btn-pill { border-radius: 999px; padding:.4rem .9rem; border:1px solid #e5e7eb; background:#fff; }
+  .btn.btn-pill:hover { background:#f3f4f6; }
+  
