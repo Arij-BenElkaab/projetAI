@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+
+# production build
+dist/
+
+# Angular cache
+.angular/
+
+# tests
+coverage/
+
+# logs & misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json.*.backup
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
